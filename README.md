@@ -46,4 +46,15 @@ CSV import/export για εναλλακτική αποθήκευση
 | Εισαγωγή CSV | Μαζική προσθήκη βιβλίων ή μελών από υπάρχουσα λίστα |
 | Offline λειτουργία | Όλα τα δεδομένα αποθηκεύονται τοπικά για μέγιστη ασφάλεια |
 
+## Εικόνες
+<img width="1315" height="828" alt="image" src="https://github.com/user-attachments/assets/137b2e5a-25ac-4c4e-962c-a0ac2d673d4c" />
+<img width="1312" height="830" alt="image" src="https://github.com/user-attachments/assets/e94c1966-8e93-47f4-80d3-3c8d75bf327c" />
+<img width="1305" height="825" alt="image" src="https://github.com/user-attachments/assets/e7e95fc2-b3ff-446a-af43-bde8dbbce626" />
+<img width="1308" height="828" alt="image" src="https://github.com/user-attachments/assets/9f996c23-fa3e-48d2-967f-0d19c3dd568b" />
+<img width="1306" height="829" alt="image" src="https://github.com/user-attachments/assets/c6ccb5cf-8e0d-421a-84b8-cc1fa24e2d60" />
+<img width="501" height="161" alt="image" src="https://github.com/user-attachments/assets/35754eae-d5cb-4b3f-842e-8fd783f42130" />
+<img width="495" height="154" alt="image" src="https://github.com/user-attachments/assets/40acae98-d093-45e5-bd68-607cf14ad49b" />
+
+
+
 
