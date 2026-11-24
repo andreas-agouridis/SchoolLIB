@@ -1,6 +1,7 @@
 from PySide6 import QtCore, QtWidgets
 
 from core import backup
+from core.i18n import tr
 from ui.icons import make_icon
 
 
@@ -14,18 +15,54 @@ class SettingsPage(QtWidgets.QWidget):
         self._build()
 
     def _build(self):
-        layout = QtWidgets.QVBoxLayout(self)
+        outer = QtWidgets.QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        scroll = QtWidgets.QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+        content = QtWidgets.QWidget()
+        content.setObjectName("page")
+        scroll.setWidget(content)
+        outer.addWidget(scroll)
+
+        layout = QtWidgets.QVBoxLayout(content)
         layout.setContentsMargins(24, 20, 24, 20)
         layout.setSpacing(12)
         header = QtWidgets.QLabel("Ρυθμίσεις")
         header.setObjectName("header")
         layout.addWidget(header)
 
+        profile = QtWidgets.QGroupBox("School profile")
+        pl = QtWidgets.QFormLayout(profile)
+        pl.setSpacing(10)
+        self.ed_school = QtWidgets.QLineEdit(self.settings.school_name)
+        self.ed_country = QtWidgets.QLineEdit(self.settings.school_country)
+        self.ed_location = QtWidgets.QLineEdit(self.settings.school_location)
+        self.ed_phone = QtWidgets.QLineEdit(self.settings.school_phone)
+        self.ed_email = QtWidgets.QLineEdit(self.settings.school_email)
+        self.ed_contact = QtWidgets.QLineEdit(self.settings.school_contact)
+        self.cmb_language = QtWidgets.QComboBox()
+        self.cmb_language.addItem("English", "en")
+        self.cmb_language.addItem("Ελληνικά", "el")
+        language_index = self.cmb_language.findData(self.settings.language)
+        if language_index >= 0:
+            self.cmb_language.setCurrentIndex(language_index)
+        pl.addRow("School name *:", self.ed_school)
+        pl.addRow("Country *:", self.ed_country)
+        pl.addRow("City / address:", self.ed_location)
+        pl.addRow("Phone:", self.ed_phone)
+        pl.addRow("Email:", self.ed_email)
+        pl.addRow("Librarian / contact:", self.ed_contact)
+        pl.addRow("App language:", self.cmb_language)
+        btn_profile = QtWidgets.QPushButton(" Save school profile")
+        btn_profile.setObjectName("success")
+        btn_profile.clicked.connect(self._save_profile)
+        pl.addRow(btn_profile)
+        layout.addWidget(profile)
+
         gen = QtWidgets.QGroupBox("Γενικές Ρυθμίσεις")
         gl = QtWidgets.QFormLayout(gen)
         gl.setSpacing(10)
-        self.ed_school = QtWidgets.QLineEdit(self.settings.school_name)
-        gl.addRow("Όνομα σχολείου / βιβλιοθήκης:", self.ed_school)
         self.sp_due = QtWidgets.QSpinBox()
         self.sp_due.setRange(1, 366)
         self.sp_due.setValue(self.settings.due_days)
@@ -80,6 +117,14 @@ class SettingsPage(QtWidgets.QWidget):
 
     def refresh(self):
         self.ed_school.setText(self.settings.school_name)
+        self.ed_country.setText(self.settings.school_country)
+        self.ed_location.setText(self.settings.school_location)
+        self.ed_phone.setText(self.settings.school_phone)
+        self.ed_email.setText(self.settings.school_email)
+        self.ed_contact.setText(self.settings.school_contact)
+        language_index = self.cmb_language.findData(self.settings.language)
+        if language_index >= 0:
+            self.cmb_language.setCurrentIndex(language_index)
         self.sp_due.setValue(self.settings.due_days)
         self.sp_max.setValue(self.settings.max_loans)
         self.sp_remind.setValue(self.settings.remind_days)
@@ -90,8 +135,37 @@ class SettingsPage(QtWidgets.QWidget):
         self.ed_bk_password.setText(self.settings.backup_password)
         self.sp_bk_count.setValue(self.settings.backup_count)
 
+    def _save_profile(self):
+        school = self.ed_school.text().strip()
+        country = self.ed_country.text().strip()
+        if not school or not country:
+            QtWidgets.QMessageBox.warning(
+                self, tr("School profile"),
+                tr("Enter the school name and country to continue.")
+            )
+            return
+
+        old_language = self.settings.language
+        profile = {
+            "school_name": school,
+            "school_country": country,
+            "school_location": self.ed_location.text().strip(),
+            "school_phone": self.ed_phone.text().strip(),
+            "school_email": self.ed_email.text().strip(),
+            "school_contact": self.ed_contact.text().strip(),
+            "language": self.cmb_language.currentData(),
+        }
+        for key, value in profile.items():
+            self.settings.set(key, value)
+        self.main.update_branding()
+        if profile["language"] != old_language:
+            message = tr("School profile saved. Restart the app to apply the language change.")
+        else:
+            message = tr("School profile saved.")
+        self.main.status_message(message)
+        QtWidgets.QMessageBox.information(self, tr("School profile"), message)
+
     def _save_general(self):
-        self.settings.set("school_name", self.ed_school.text().strip() or "Βιβλιοθήκη Σχολείου")
         self.settings.set("due_days", str(self.sp_due.value()))
         self.settings.set("max_loans", str(self.sp_max.value()))
         self.settings.set("remind_days", str(self.sp_remind.value()))

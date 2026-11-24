@@ -35,7 +35,35 @@ class AppSettings:
 
     @property
     def school_name(self):
-        return self.get("school_name", "Βιβλιοθήκη Σχολείου")
+        return self.get("school_name", "School Library")
+
+    @property
+    def school_country(self):
+        return self.get("school_country", "")
+
+    @property
+    def school_location(self):
+        return self.get("school_location", "")
+
+    @property
+    def school_phone(self):
+        return self.get("school_phone", "")
+
+    @property
+    def school_email(self):
+        return self.get("school_email", "")
+
+    @property
+    def school_contact(self):
+        return self.get("school_contact", "")
+
+    @property
+    def language(self):
+        return self.get("language", "en")
+
+    @property
+    def setup_complete(self):
+        return self.get("setup_complete", "false") == "true"
 
     @property
     def auto_backup(self):
@@ -59,6 +87,13 @@ class AppSettings:
             "remind_days": self.remind_days,
             "font_size": self.font_size,
             "school_name": self.school_name,
+            "school_country": self.school_country,
+            "school_location": self.school_location,
+            "school_phone": self.school_phone,
+            "school_email": self.school_email,
+            "school_contact": self.school_contact,
+            "language": self.language,
+            "setup_complete": self.setup_complete,
             "auto_backup": self.auto_backup,
             "backup_password": self.backup_password,
             "backup_count": self.backup_count,

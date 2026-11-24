@@ -2,6 +2,7 @@ import datetime
 
 from PySide6 import QtCore, QtWidgets
 
+from core.i18n import tr
 from ui.widgets.autocomplete import FilterComboBox
 
 
@@ -68,9 +69,9 @@ class LoanDialog(QtWidgets.QDialog):
         parts = []
         if member:
             act = self.db.member_active_loans(member.get("id"))
-            parts.append(f"Μέλος: {len(act)} ενεργά δάνεια")
+            parts.append(tr(f"Μέλος: {len(act)} ενεργά δάνεια"))
         if book:
-            parts.append(f"Βιβλίο: {book.get('available', 0)} διαθέσιμα αντίτυπα")
+            parts.append(tr(f"Βιβλίο: {book.get('available', 0)} διαθέσιμα αντίτυπα"))
         self.info_lbl.setText("  •  ".join(parts))
 
     def _accept(self):
@@ -99,6 +100,7 @@ def pick_active_loan(db, parent, title="Επιλέξτε δάνειο"):
     layout = QtWidgets.QVBoxLayout(dlg)
     layout.addWidget(QtWidgets.QLabel("Επιλέξτε δάνειο από τη λίστα:"))
     lw = QtWidgets.QListWidget()
+    lw.setObjectName("activeLoanPicker")
     for l in loans:
         overdue = l["days_left"] < 0
         label = (f"{l['book_title']}  [{l['book_number']}] -> {l['member_name']}  "

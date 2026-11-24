@@ -3,6 +3,7 @@ import datetime
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from services import exporter
+from core.i18n import language, tr
 from ui.icons import make_icon
 from ui.widgets.calendar_widget import DueCalendar
 from ui import theme
@@ -29,6 +30,7 @@ class CalendarPage(QtWidgets.QWidget):
         h.setContentsMargins(0, 0, 0, 0)
         h.setSpacing(16)
         self.calendar = DueCalendar()
+        self.calendar.setLocale(QtCore.QLocale("el_GR" if language() == "el" else "en_US"))
         self.calendar.setMinimumWidth(520)
         h.addWidget(self.calendar, 2)
         right = QtWidgets.QWidget()
@@ -38,6 +40,7 @@ class CalendarPage(QtWidgets.QWidget):
         lbl.setObjectName("section")
         rv.addWidget(lbl)
         self.loans_list = QtWidgets.QListWidget()
+        self.loans_list.setObjectName("calendarLoansList")
         rv.addWidget(self.loans_list, 1)
         btn_export = QtWidgets.QPushButton(" Εξαγωγή")
         btn_export.setIcon(make_icon("export", "#ffffff", 18))
@@ -109,7 +112,7 @@ class CalendarPage(QtWidgets.QWidget):
             d = dict(l)
             d["member"] = d.pop("member_name", "")
             d["book"] = d.pop("book_title", "")
-            d["status"] = "Υπερημερία" if l["days_left"] < 0 else "Κανονικό"
+            d["status"] = tr("Υπερημερία") if l["days_left"] < 0 else tr("Κανονικό")
             data.append(d)
         exporter.export_rows(data, ["book", "member", "due_date", "status"], path, fmt=fmt,
                              title=f"Δάνεια {selected}", school_name=self.main.settings.school_name)

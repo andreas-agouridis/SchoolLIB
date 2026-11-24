@@ -124,7 +124,9 @@ class LibraryDB:
             cur.execute("INSERT INTO libraries(name, created_at) VALUES(?,?)", ("Κεντρική Βιβλιοθήκη", now_str()))
 
         for key in ("due_days", "max_loans", "remind_days", "font_size", "school_name",
-                    "auto_backup", "backup_password", "backup_count"):
+                    "school_country", "school_location", "school_phone", "school_email",
+                    "school_contact", "language", "setup_complete", "auto_backup",
+                    "backup_password", "backup_count"):
             cur.execute("INSERT OR IGNORE INTO app_settings(key, value) VALUES(?,?)", (key, ""))
 
         conn.commit()

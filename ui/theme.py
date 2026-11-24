@@ -1,17 +1,17 @@
 from PySide6.QtGui import QColor, QFont
 
-PRIMARY = "#2c5f8a"
-PRIMARY_DARK = "#1f4464"
-ACCENT = "#e67e22"
-SUCCESS = "#27ae60"
-WARNING = "#f39c12"
-DANGER = "#c0392b"
-BG = "#f2f5f8"
+PRIMARY = "#315fce"
+PRIMARY_DARK = "#193b6c"
+ACCENT = "#e99537"
+SUCCESS = "#16876b"
+WARNING = "#d97706"
+DANGER = "#c2414b"
+BG = "#f4f7fb"
 CARD = "#ffffff"
-TEXT = "#22303a"
-TEXT_MUTED = "#6b7a86"
-SIDEBAR = "#1e2b3a"
-SIDEBAR_ACTIVE = "#2c5f8a"
+TEXT = "#243447"
+TEXT_MUTED = "#6b7c93"
+SIDEBAR = "#14263d"
+SIDEBAR_ACTIVE = "#315fce"
 
 
 def font_size_cfg(key="large"):
@@ -41,31 +41,32 @@ def build_stylesheet(key="large"):
     QLabel#muted {{ color: {TEXT_MUTED}; font-size: {str(int(base*0.92))}px; }}
     QLineEdit, QComboBox, QDateEdit, QSpinBox, QTextEdit, QPlainTextEdit, QDoubleSpinBox {{
         background: {CARD};
-        border: 1.5px solid #c5cdd5;
-        border-radius: 6px;
+        border: 1px solid #d6deea;
+        border-radius: 8px;
         padding: {str(int(base*0.55))}px {str(int(base*0.8))}px;
         min-height: {str(int(base*1.6))}px;
         selection-background-color: {PRIMARY};
     }}
-    QLineEdit:focus, QComboBox:focus, QDateEdit:focus, QTextEdit:focus {{
-        border: 2px solid {PRIMARY};
+    QLineEdit:focus, QComboBox:focus, QDateEdit:focus, QTextEdit:focus,
+    QSpinBox:focus, QDoubleSpinBox:focus {{
+        border: 1px solid {PRIMARY};
     }}
     QPushButton {{
         background: {PRIMARY};
         color: white;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         padding: {str(int(base*0.7))}px {str(int(base*1.4))}px;
         font-weight: 600;
         min-height: {str(int(base*1.7))}px;
     }}
-    QPushButton:hover {{ background: {PRIMARY_DARK}; }}
-    QPushButton:pressed {{ background: #18344f; }}
+    QPushButton:hover {{ background: #254ea9; }}
+    QPushButton:pressed {{ background: {PRIMARY_DARK}; }}
     QPushButton:disabled {{ background: #b9c3cd; color: #eef2f5; }}
     QPushButton#secondary {{
-        background: #e8edf2; color: {PRIMARY_DARK};
+        background: #e9eef8; color: {PRIMARY_DARK};
     }}
-    QPushButton#secondary:hover {{ background: #d5dee7; }}
+    QPushButton#secondary:hover {{ background: #dce5f3; }}
     QPushButton#danger {{ background: {DANGER}; }}
     QPushButton#danger:hover {{ background: #922b21; }}
     QPushButton#success {{ background: {SUCCESS}; }}
@@ -82,7 +83,7 @@ def build_stylesheet(key="large"):
         font-size: {str(int(btn*0.95))}px;
         padding: {str(int(base*1.1))}px {str(int(base*1.8))}px;
         min-height: {str(int(base*2.4))}px;
-        border-radius: 8px;
+        border-radius: 10px;
     }}
     QLineEdit#search {{
         font-size: {str(int(btn*0.85))}px;
@@ -90,32 +91,32 @@ def build_stylesheet(key="large"):
     }}
     QTableWidget {{
         background: {CARD};
-        border: 1px solid #d7dee5;
-        border-radius: 6px;
-        gridline-color: #e3e8ed;
-        alternate-background-color: #f7f9fb;
+        border: 1px solid #e1e7ef;
+        border-radius: 10px;
+        gridline-color: transparent;
+        alternate-background-color: #f8fafd;
     }}
-    QTableWidget::item {{ padding: 6px; }}
-    QTableWidget::item:selected {{ background: #dbe7f3; color: {TEXT}; }}
+    QTableWidget::item {{ padding: 7px; border-bottom: 1px solid #eff2f6; }}
+    QTableWidget::item:selected {{ background: #e5edff; color: {TEXT}; }}
     QHeaderView::section {{
-        background: {PRIMARY_DARK};
-        color: white;
+        background: #f2f5fa;
+        color: {TEXT_MUTED};
         border: none;
-        padding: 8px 10px;
+        padding: 10px 10px;
         font-weight: 600;
         font-size: {str(int(base*0.95))}px;
     }}
     QListWidget, QTreeWidget {{
         background: {CARD};
-        border: 1px solid #d7dee5;
-        border-radius: 6px;
+        border: 1px solid #e1e7ef;
+        border-radius: 10px;
     }}
     QListWidget::item, QTreeWidget::item {{ padding: {str(int(base*0.4))}px; }}
-    QListWidget::item:selected, QTreeWidget::item:selected {{ background: #dbe7f3; }}
+    QListWidget::item:selected, QTreeWidget::item:selected {{ background: #e5edff; }}
     QGroupBox {{
         background: {CARD};
-        border: 1px solid #d7dee5;
-        border-radius: 8px;
+        border: 1px solid #e1e7ef;
+        border-radius: 12px;
         margin-top: {str(int(base*1.2))}px;
         padding-top: {str(int(base*0.9))}px;
         font-weight: 600;
@@ -127,12 +128,12 @@ def build_stylesheet(key="large"):
         padding: 0 {str(int(base*0.4))}px;
         color: {PRIMARY_DARK};
     }}
-    QTabWidget::pane {{ border: 1px solid #d7dee5; border-radius: 6px; background: {CARD}; }}
+    QTabWidget::pane {{ border: 1px solid #e1e7ef; border-radius: 8px; background: {CARD}; }}
     QTabBar::tab {{
-        background: #e3e9ef;
+        background: #e9eef5;
         padding: {str(int(base*0.8))}px {str(int(base*1.5))}px;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
         margin-right: 3px;
         font-weight: 600;
     }}
@@ -179,8 +180,8 @@ def card_style():
     return f"""
     QFrame#card {{
         background: {CARD};
-        border: 1px solid #dbe2ea;
-        border-radius: 10px;
+        border: 1px solid #e1e7ef;
+        border-radius: 14px;
     }}
     QLabel#card_value {{ font-size: 30px; font-weight: 800; color: {PRIMARY_DARK}; }}
     QLabel#card_title {{ font-size: 14px; font-weight: 600; color: {TEXT_MUTED}; }}

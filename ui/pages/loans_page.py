@@ -3,6 +3,7 @@ import datetime
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from services import exporter
+from core.i18n import tr
 from services.printing import reminders_pdf
 from ui.icons import make_icon
 from ui.widgets.table_helpers import make_table, fill_table, selected_data, SearchBar
@@ -147,6 +148,7 @@ class LoansPage(QtWidgets.QWidget):
                 for c in range(self.active_table.columnCount()):
                     self.active_table.item(r, c).setBackground(QtGui.QBrush(bg))
             label = "Ληξιπρόθεσμο" if days < 0 else (f"Υπολείπονται {days} ημέρες" if days > 0 else "Λήγει σήμερα")
+            label = tr(label)
             self.active_table.item(r, 4).setToolTip(label)
 
     def _refresh_history(self):

@@ -9,8 +9,8 @@ class NavButton(QtWidgets.QPushButton):
     def __init__(self, text, icon_name, parent=None):
         super().__init__(text, parent)
         self._icon_name = icon_name
-        self._base_color = "#8899aa"
-        self._hover_color = "#d8e2ec"
+        self._base_color = "#aebcd0"
+        self._hover_color = "#ffffff"
         self._active_color = "#ffffff"
 
         self.setIcon(make_icon(icon_name, self._base_color, 20))
@@ -19,27 +19,27 @@ class NavButton(QtWidgets.QPushButton):
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setFixedHeight(48)
 
-        self.setStyleSheet("""
-            QPushButton {
+        self.setStyleSheet(f"""
+            QPushButton {{
                 background: transparent;
-                color: #8899aa;
+                color: #aebcd0;
                 border: none;
                 text-align: left;
-                padding: 14px 18px 14px 14px;
+                padding: 12px 18px 12px 14px;
                 font-size: 14px;
                 font-weight: 600;
-                border-radius: 8px;
-                margin: 2px 8px;
-            }
-            QPushButton:hover {
-                background: #263a50;
-                color: #d8e2ec;
-            }
-            QPushButton:checked {
-                background: #2c5f8a;
+                border-radius: 9px;
+                margin: 2px 10px;
+            }}
+            QPushButton:hover {{
+                background: #25364a;
+                color: #ffffff;
+            }}
+            QPushButton:checked {{
+                background: {theme.SIDEBAR_ACTIVE};
                 color: #ffffff;
                 font-weight: 700;
-            }
+            }}
         """)
 
     def _update_icon(self):

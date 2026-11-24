@@ -1,10 +1,10 @@
 import os
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from core.db import LibraryDB
 from core.settings import AppSettings
 from core.backup import auto_backup
 from core import paths
+from core.i18n import tr, translate_widget_tree
 from services import exporter
 from ui import theme
 from ui.icons import make_icon
@@ -30,11 +30,11 @@ PAGES = [
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, db_path):
+    def __init__(self, db):
         super().__init__()
-        self.db = LibraryDB(db_path)
+        self.db = db
         self.settings = AppSettings(self.db)
-        self.setWindowTitle("SchoolLIB - Διαχείριση Σχολικής Βιβλιοθήκης")
+        self.setWindowTitle(tr("SchoolLIB - Διαχείριση Σχολικής Βιβλιοθήκης"))
         icon = os.path.join(paths.BASE, "icon.png")
         if os.path.exists(icon):
             self.setWindowIcon(QtGui.QIcon(icon))
@@ -53,56 +53,74 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.sidebar = QtWidgets.QWidget()
         self.sidebar.setObjectName("sidebar")
-        self.sidebar.setFixedWidth(230)
+        self.sidebar.setFixedWidth(250)
         self.sidebar.setStyleSheet(f"""
             QWidget#sidebar {{
                 background: {theme.SIDEBAR};
-                border-right: 1px solid #151f2a;
+                border-right: 1px solid #263a52;
             }}
-            QLabel#logo {{
-                color: white;
-                font-size: 22px;
+            QLabel#brandName {{
+                color: #ffffff;
+                font-size: 21px;
                 font-weight: 800;
-                padding: 24px 20px 4px 20px;
-                letter-spacing: 1px;
+                padding: 0;
             }}
-            QLabel#sub {{
-                color: #6b7f94;
-                padding: 0 20px 6px 20px;
-                font-size: 11px;
-                font-weight: 500;
+            QLabel#schoolName {{
+                color: #b7c5d5;
+                padding: 8px 0 0 0;
+                font-size: 12px;
+                font-weight: 600;
             }}
             QFrame#separator {{
-                background: #2a3b52;
+                background: #36465a;
                 max-height: 1px;
-                margin: 8px 20px;
+                margin: 12px 18px;
             }}
             QPushButton#statsBtn {{
                 background: transparent;
-                color: #6b7f94;
+                color: #b7c5d5;
                 border: none;
                 text-align: left;
-                padding: 14px 18px 14px 14px;
+                padding: 12px 18px 12px 14px;
                 font-size: 14px;
                 font-weight: 600;
-                border-radius: 8px;
-                margin: 2px 8px;
+                border-radius: 9px;
+                margin: 2px 10px;
             }}
             QPushButton#statsBtn:hover {{
-                background: #263a50;
-                color: #d8e2ec;
+                background: #25364a;
+                color: #ffffff;
             }}
         """)
         sb = QtWidgets.QVBoxLayout(self.sidebar)
-        sb.setContentsMargins(0, 0, 0, 0)
-        sb.setSpacing(0)
+        sb.setContentsMargins(8, 18, 8, 12)
+        sb.setSpacing(2)
 
-        logo = QtWidgets.QLabel("SchoolLIB")
-        logo.setObjectName("logo")
-        sb.addWidget(logo)
-        sub = QtWidgets.QLabel("Βιβλιοθήκη Σχολείου")
-        sub.setObjectName("sub")
-        sb.addWidget(sub)
+        brand = QtWidgets.QWidget()
+        brand_layout = QtWidgets.QHBoxLayout(brand)
+        brand_layout.setContentsMargins(10, 4, 10, 8)
+        brand_layout.setSpacing(10)
+        brand_icon = QtWidgets.QLabel()
+        brand_icon.setFixedSize(40, 40)
+        brand_icon.setAlignment(QtCore.Qt.AlignCenter)
+        brand_icon.setStyleSheet("background: #ffffff; border-radius: 10px;")
+        icon_path = os.path.join(paths.BASE, "icon.png")
+        if os.path.exists(icon_path):
+            brand_icon.setPixmap(QtGui.QPixmap(icon_path).scaled(
+                32, 32, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
+            ))
+        brand_name = QtWidgets.QLabel("SchoolLIB")
+        brand_name.setObjectName("brandName")
+        brand_layout.addWidget(brand_icon)
+        brand_layout.addWidget(brand_name)
+        brand_layout.addStretch()
+        sb.addWidget(brand)
+
+        self.school_name_label = QtWidgets.QLabel()
+        self.school_name_label.setObjectName("schoolName")
+        self.school_name_label.setWordWrap(True)
+        self.school_name_label.setContentsMargins(12, 0, 12, 10)
+        sb.addWidget(self.school_name_label)
 
         sep1 = QtWidgets.QFrame()
         sep1.setObjectName("separator")
@@ -138,10 +156,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         copyright_label = QtWidgets.QLabel("Copyright \u00a9 Andreas Agouridis")
         copyright_label.setAlignment(QtCore.Qt.AlignCenter)
-        copyright_label.setStyleSheet("color: #4a5c6e; font-size: 10px; padding: 4px 10px; background: transparent; border: none;")
+        copyright_label.setStyleSheet("color: #9aabc0; font-size: 10px; padding: 4px 10px; background: transparent; border: none;")
         sb.addWidget(copyright_label)
 
-        website_label = QtWidgets.QLabel('<a href="https://apps.andreasagouridis.com/schoollib" style="color: #5a8ab5; text-decoration: none; font-size: 10px;">Official Web Site</a>')
+        website_label = QtWidgets.QLabel('<a href="https://apps.andreasagouridis.com/schoollib" style="color: #8fb9e3; text-decoration: none; font-size: 10px;">Official Web Site</a>')
         website_label.setAlignment(QtCore.Qt.AlignCenter)
         website_label.setOpenExternalLinks(True)
         website_label.setStyleSheet("color: #5a8ab5; font-size: 10px; padding: 2px 10px 10px 10px; background: transparent; border: none;")
@@ -149,6 +167,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.root_layout.addWidget(self.sidebar)
 
+        content = QtWidgets.QWidget()
+        content_layout = QtWidgets.QVBoxLayout(content)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+        topbar = QtWidgets.QFrame()
+        topbar.setObjectName("topbar")
+        topbar.setStyleSheet("""
+            QFrame#topbar {
+                background: #ffffff;
+                border-bottom: 1px solid #e1e7ee;
+            }
+        """)
+        topbar_layout = QtWidgets.QHBoxLayout(topbar)
+        topbar_layout.setContentsMargins(28, 12, 28, 12)
+        self.topbar_school = QtWidgets.QLabel()
+        self.topbar_school.setObjectName("topbarSchool")
+        self.topbar_school.setStyleSheet("font-size: 14px; font-weight: 700; color: #26384a;")
+        self.topbar_location = QtWidgets.QLabel()
+        self.topbar_location.setObjectName("muted")
+        topbar_layout.addWidget(self.topbar_school)
+        topbar_layout.addStretch()
+        topbar_layout.addWidget(self.topbar_location)
+        self.update_branding()
+        content_layout.addWidget(topbar)
         self.stack = QtWidgets.QStackedWidget()
         self.pages = {}
         self.pages["dashboard"] = DashboardPage(self.db, self)
@@ -162,12 +204,22 @@ class MainWindow(QtWidgets.QMainWindow):
         for key, _, _ in PAGES:
             self.stack.addWidget(self.pages[key])
         self.import_page = self.pages["import"]
-        self.root_layout.addWidget(self.stack, 1)
+        content_layout.addWidget(self.stack, 1)
+        self.root_layout.addWidget(content, 1)
 
         self.status = self.statusBar()
         self.status.showMessage("Έτοιμο", 3000)
         self.status.setStyleSheet("QStatusBar { color: #6b7a86; font-size: 11px; }")
         self.status.setSizeGripEnabled(False)
+
+    def update_branding(self):
+        school = self.settings.school_name
+        location = " · ".join(part for part in (
+            self.settings.school_location, self.settings.school_country
+        ) if part)
+        self.school_name_label.setText(school)
+        self.topbar_school.setText(school)
+        self.topbar_location.setText(location)
 
     def show_page(self, key):
         self.stack.setCurrentWidget(self.pages[key])
@@ -177,6 +229,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.pages["import"].refresh()
         else:
             self.pages[key].refresh()
+        translate_widget_tree(self.pages[key])
 
     def goto_import(self):
         self.show_page("import")
@@ -187,9 +240,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.pages[key].refresh()
             except Exception:
                 pass
+            translate_widget_tree(self.pages[key])
 
     def status_message(self, msg, timeout=6000):
-        self.status.showMessage(msg, timeout)
+        self.status.showMessage(tr(msg), timeout)
 
     def apply_font_size(self):
         key = self.settings.font_size
@@ -252,24 +306,24 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_stats_dialog(self):
         s = self.db.stats()
         top = self.db.top_books(5)
-        text = ("ΣΥΝΟΠΤΙΚΑ ΣΤΑΤΙΣΤΙΚΑ\n\n"
-                f"Βιβλιοθήκες: {s['libraries']}\n"
-                f"Βιβλία (τίτλοι): {s['books']}\n"
-                f"Αντίτυπα: {s['copies']}\n"
-                f"Μέλη: {s['members']}\n"
-                f"Ράφια/τοποθεσίες: {s['shelves']}\n"
-                f"Κατηγορίες: {s['categories']}\n"
-                f"Ενεργά δάνεια: {s['active_loans']}\n"
-                f"Συνολικοί δανεισμοί: {s['loans_total']}\n"
-                f"Καθυστερημένα: {s['overdue']}\n"
-                f"Λήγουν άμεσα: {s['due_soon']}\n\n"
-                "ΔΗΜΟΦΙΛΕΣΤΕΡΑ ΒΙΒΛΙΑ\n")
+        text = (tr("ΣΥΝΟΠΤΙΚΑ ΣΤΑΤΙΣΤΙΚΑ") + "\n\n"
+                f"{tr('Βιβλιοθήκες')}: {s['libraries']}\n"
+                f"{tr('Βιβλία (τίτλοι)')}: {s['books']}\n"
+                f"{tr('Αντίτυπα')}: {s['copies']}\n"
+                f"{tr('Μέλη')}: {s['members']}\n"
+                f"{tr('Ράφια/τοποθεσίες')}: {s['shelves']}\n"
+                f"{tr('Κατηγορίες')}: {s['categories']}\n"
+                f"{tr('Ενεργά δάνεια')}: {s['active_loans']}\n"
+                f"{tr('Συνολικοί δανεισμοί')}: {s['loans_total']}\n"
+                f"{tr('Καθυστερημένα')}: {s['overdue']}\n"
+                f"{tr('Λήγουν άμεσα')}: {s['due_soon']}\n\n"
+                f"{tr('ΔΗΜΟΦΙΛΕΣΤΕΡΑ ΒΙΒΛΙΑ')}\n")
         if top:
             for i, t in enumerate(top, 1):
-                text += f"\n{i}. {t['title']} - {t['times']} δανεισμοί"
+                text += f"\n{i}. {t['title']} - {t['times']} {tr('δανεισμοί')}"
         else:
-            text += "\n- Κανένα δάνειο ακόμη -"
-        QtWidgets.QMessageBox.information(self, "Στατιστικά", text)
+            text += f"\n- {tr('Κανένα δάνειο ακόμη')} -"
+        QtWidgets.QMessageBox.information(self, tr("Στατιστικά"), text)
 
     # ---- backup dir / temp -------------------------------------------
     def backup_dir(self):

@@ -63,6 +63,7 @@ class DashboardPage(QtWidgets.QWidget):
         a_l = QtWidgets.QVBoxLayout(self.alerts)
         a_l.addWidget(self._section("Προσοχή"))
         self.alerts_list = QtWidgets.QListWidget()
+        self.alerts_list.setObjectName("alertsList")
         self.alerts_list.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
         self.alerts_list.setFrameShape(QtWidgets.QFrame.NoFrame)
         a_l.addWidget(self.alerts_list, 1)
